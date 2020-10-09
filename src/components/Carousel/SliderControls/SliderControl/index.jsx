@@ -14,6 +14,9 @@ class SliderControl extends Component {
   }
 }
 
-SliderControl.propTypes = {};
+SliderControl.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  path: PropTypes.string.isRequired,
+};
 
 export default SliderControl;

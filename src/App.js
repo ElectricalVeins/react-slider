@@ -6,7 +6,9 @@ console.log(slides);
 
 function App() {
   return (
-    <Carousel slides={slides} />
+    <>
+      <Carousel slides={slides} />
+    </>
   );
 }
 

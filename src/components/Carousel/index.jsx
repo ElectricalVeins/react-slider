@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { mdiArrowLeft, mdiArrowRight, mdiPlay } from '@mdi/js';
+import cx from 'classnames';
 import Slide from './Slide';
 import styles from './Carousel.module.sass';
-import SliderControl from './SliderControl';
+import Controls from './SliderControls';
 
 class Carousel extends Component {
   constructor(props) {
@@ -11,10 +11,37 @@ class Carousel extends Component {
 
     this.state = {
       currentIndex: 0,
+      intervalTime: 2000,
+      isFullscreen: false,
+      isPlaying: false,
     };
-    
+
     this.intervalId = null;
   }
+
+  componentWillUnmount() {
+    this.stopSlider();
+  }
+
+  changeIntervalTime = v => {
+    this.stopSlider();
+    this.setState({
+      intervalTime: v,
+    });
+    this.startSlider();
+  };
+
+  stopSlider = () => {
+    clearInterval(this.intervalId);
+    this.setState({ isPlaying: false });
+  };
+
+  startSlider = () => {
+    this.setState({ isPlaying: true });
+    this.intervalId = setInterval(() => {
+      this.nextSlide();
+    }, this.state.intervalTime);
+  };
 
   currentSlide = () => {
     const { currentIndex } = this.state;
@@ -35,17 +62,33 @@ class Carousel extends Component {
     }));
   };
 
+  changeFullscreen = () => {
+    this.setState({
+      isFullscreen: !this.state.isFullscreen,
+    });
+  };
+
   render() {
+    const { isPlaying, intervalTime, isFullscreen } = this.state;
+    const wrapperStyles = cx({ [styles.fullscreen]: isFullscreen });
     return (
-      <div style={{maxWidth: this.props.maxWidth || '1200px'}}>
+      <div
+        className={wrapperStyles}
+        style={{ maxWidth: this.props.maxWidth || '1200px' }}>
         <div className={styles.sliderContainer}>
           <div className={styles.hack}>
             <Slide {...this.currentSlide()} />
-            <div className={styles.controls}>
-              <SliderControl path={mdiArrowLeft} onClick={this.prevSlide} />
-              <SliderControl path={mdiPlay} />
-              <SliderControl path={mdiArrowRight} onClick={this.nextSlide} />
-            </div>
+            <Controls
+              isFullscreen={isFullscreen}
+              isPlaying={isPlaying}
+              intervalTime={intervalTime}
+              prevSlide={this.prevSlide}
+              nextSlide={this.nextSlide}
+              startSlider={this.startSlider}
+              stopSlider={this.stopSlider}
+              changeIntervalTime={this.changeIntervalTime}
+              changeFullscreen={this.changeFullscreen}
+            />
           </div>
         </div>
       </div>
