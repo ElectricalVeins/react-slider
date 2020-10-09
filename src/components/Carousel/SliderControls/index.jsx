@@ -20,10 +20,10 @@ const Controls = props => {
     isFullscreen,
     intervalTime,
     isPlaying,
-    prevSlide,
+    prevIndex,
+    nextIndex,
     stopSlider,
     startSlider,
-    nextSlide,
     changeFullscreen,
   } = props;
 
@@ -38,12 +38,12 @@ const Controls = props => {
         onChange={intervalHandler}
       />
       <div className={styles.controls}>
-        <SliderControl path={mdiArrowLeft} onClick={prevSlide} />
+        <SliderControl path={mdiArrowLeft} onClick={prevIndex} />
         <SliderControl
           path={isPlaying ? mdiStop : mdiPlay}
           onClick={isPlaying ? stopSlider : startSlider}
         />
-        <SliderControl path={mdiArrowRight} onClick={nextSlide} />
+        <SliderControl path={mdiArrowRight} onClick={nextIndex} />
         <SliderControl
           path={isFullscreen ? mdiFullscreenExit : mdiFullscreen}
           onClick={changeFullscreen}
@@ -55,10 +55,10 @@ const Controls = props => {
 
 Controls.propTypes = {
   isPlaying: PropTypes.bool.isRequired,
-  prevSlide: PropTypes.func.isRequired,
+  prevIndex: PropTypes.func.isRequired,
   stopSlider: PropTypes.func.isRequired,
   startSlider: PropTypes.func.isRequired,
-  nextSlide: PropTypes.func.isRequired,
+  nextIndex: PropTypes.func.isRequired,
 };
 
 export default Controls;

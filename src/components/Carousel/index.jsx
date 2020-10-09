@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
+import {TransitionGroup, CSSTransition} from 'react-transition-group'
 import Slide from './Slide';
 import styles from './Carousel.module.sass';
+import transitions from './CarouselTransitions.module.css';
 import Controls from './SliderControls';
 
 class Carousel extends Component {
@@ -11,6 +13,7 @@ class Carousel extends Component {
 
     this.state = {
       currentIndex: 0,
+      nextIndex: 1,
       intervalTime: 2000,
       isFullscreen: false,
       isPlaying: false,
@@ -23,10 +26,10 @@ class Carousel extends Component {
     this.stopSlider();
   }
 
-  changeIntervalTime = v => {
+  changeIntervalTime = value => {
     this.stopSlider();
     this.setState({
-      intervalTime: v,
+      intervalTime: value,
     });
     this.startSlider();
   };
@@ -39,7 +42,7 @@ class Carousel extends Component {
   startSlider = () => {
     this.setState({ isPlaying: true });
     this.intervalId = setInterval(() => {
-      this.nextSlide();
+      this.nextIndex();
     }, this.state.intervalTime);
   };
 
@@ -49,13 +52,13 @@ class Carousel extends Component {
     return slides[currentIndex];
   };
 
-  nextSlide = () => {
+  nextIndex = () => {
     this.setState((state, props) => ({
       currentIndex: (state.currentIndex + 1) % props.slides.length,
     }));
   };
 
-  prevSlide = () => {
+  prevIndex = () => {
     this.setState((state, props) => ({
       currentIndex:
         (state.currentIndex - 1 + props.slides.length) % props.slides.length,
@@ -69,7 +72,7 @@ class Carousel extends Component {
   };
 
   render() {
-    const { isPlaying, intervalTime, isFullscreen } = this.state;
+    const { isPlaying, intervalTime, isFullscreen, currentIndex } = this.state;
     const wrapperStyles = cx({ [styles.fullscreen]: isFullscreen });
     return (
       <div
@@ -77,13 +80,20 @@ class Carousel extends Component {
         style={{ maxWidth: this.props.maxWidth || '1200px' }}>
         <div className={styles.sliderContainer}>
           <div className={styles.hack}>
-            <Slide {...this.currentSlide()} />
+            <TransitionGroup component={null}>
+              <CSSTransition
+                key={currentIndex}
+                timeout={1000}
+                classNames={{ ...transitions }}>
+                <Slide {...this.currentSlide()} />
+              </CSSTransition>
+            </TransitionGroup>
             <Controls
               isFullscreen={isFullscreen}
               isPlaying={isPlaying}
               intervalTime={intervalTime}
-              prevSlide={this.prevSlide}
-              nextSlide={this.nextSlide}
+              prevIndex={this.prevIndex}
+              nextIndex={this.nextIndex}
               startSlider={this.startSlider}
               stopSlider={this.stopSlider}
               changeIntervalTime={this.changeIntervalTime}
