@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import {TransitionGroup, CSSTransition} from 'react-transition-group'
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import Slide from './Slide';
 import styles from './Carousel.module.sass';
 import transitions from './CarouselTransitions.module.css';

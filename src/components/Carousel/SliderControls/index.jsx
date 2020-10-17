@@ -13,7 +13,7 @@ import styles from './Controls.module.sass';
 
 const Controls = props => {
   const intervalHandler = event => {
-    this.props.changeIntervalTime(event.target.value);
+    props.changeIntervalTime(event.target.value);
   };
 
   const {
